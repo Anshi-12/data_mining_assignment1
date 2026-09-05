@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRISP-DM Analysis Report</title>
+<style>{{ report_css }}</style>
+</head>
+<body>
+<header class="report-header">
+  <div>
+    <p class="eyebrow">CRISP-DM Studio</p>
+    <h1>Dataset Analysis Report</h1>
+    <p class="meta">{{ report.understanding.dataset.rows }} source rows · {{ report.understanding.dataset.columns }} source columns · {{ report.preparation.summary.rows_after_structural }} rows after structural preparation</p>
+  </div>
+</header>
+
+<main>
+<section id="executive-summary">
+  <h2>Executive summary</h2>
+  <ul>
+    {% for item in report.executive_points %}<li>{{ item }}</li>{% endfor %}
+  </ul>
+</section>
+
+<section id="business-understanding">
+  <h2>Business Understanding</h2>
+  <h3>KNOWN facts</h3>
+  <ul>{% for item in report.understanding.objective.known_facts %}<li>{{ item }}</li>{% endfor %}</ul>
+  <h3>INFERRED analytical objectives</h3>
+  <ul>{% for item in report.understanding.objective.inferred_objectives %}<li>{{ item }}</li>{% endfor %}</ul>
+  <div class="note">{{ report.understanding.objective.honesty_note }}</div>
+</section>
+
+<section id="data-understanding">
+  <h2>Data Understanding</h2>
+  <div class="metric-grid">
+    <div><strong>{{ report.understanding.dataset.rows }}</strong><span>Rows</span></div>
+    <div><strong>{{ report.understanding.dataset.columns }}</strong><span>Columns</span></div>
+    <div><strong>{{ report.understanding.dataset.missing_cells }}</strong><span>Missing cells</span></div>
+    <div><strong>{{ report.understanding.dataset.duplicate_rows }}</strong><span>Duplicate rows</span></div>
+  </div>
+  <h3>Per-column profile</h3>
+  <table>
+    <thead><tr><th>Column</th><th>Inferred type</th><th>Missing</th><th>Unique</th><th>Observed profile</th></tr></thead>
+    <tbody>
+    {% for col in report.understanding.columns %}
+      <tr><td>{{ col.name }}</td><td>{{ col.feature_type.value }}</td><td>{{ col.missing_ratio|pct }}</td><td>{{ col.unique }}</td><td>{{ col.observed_summary }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <h3>Identifiers and leakage-review flags</h3>
+  {% if report.understanding.identifiers %}<p>Identifiers: {{ report.understanding.identifiers|join(', ') }}</p>{% else %}<p>No identifier-like columns were detected.</p>{% endif %}
+  {% if report.understanding.leakage_flags %}
+    <ul>{% for flag in report.understanding.leakage_flags %}<li><strong>{{ flag.column }}</strong> ({{ flag.risk }}): {{ flag.reason }}</li>{% endfor %}</ul>
+  {% else %}<p>No leakage-review flag was emitted by the structural heuristics.</p>{% endif %}
+  <h3>Candidate supervised-learning targets</h3>
+  {% if report.understanding.target_candidates %}
+  <table><thead><tr><th>Column</th><th>Task</th><th>Score</th><th>Reasons</th><th>Caveats</th></tr></thead><tbody>
+    {% for item in report.understanding.target_candidates %}<tr><td>{{ item.column }}</td><td>{{ item.task_type.value }}</td><td>{{ item.score|metric }}</td><td>{{ item.reasons|join(' ') }}</td><td>{{ item.caveats|join(' ') }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% else %}<p>No plausible supervised target was inferred from the observed schema.</p>{% endif %}
+  <h3>Data-quality warnings</h3>
+  {% if report.understanding.quality_warnings %}<ul>{% for warning in report.understanding.quality_warnings %}<li>{{ warning.message }}</li>{% endfor %}</ul>{% else %}<p>No Phase 2 quality warning crossed the configured thresholds.</p>{% endif %}
+</section>
+
+<section id="data-preparation">
+  <h2>Data Preparation</h2>
+  <div class="metric-grid">
+    <div><strong>{{ report.preparation.summary.rows_before }}</strong><span>Rows before</span></div>
+    <div><strong>{{ report.preparation.summary.rows_after_structural }}</strong><span>Rows after structural</span></div>
+    <div><strong>{{ report.preparation.summary.columns_before }}</strong><span>Columns before</span></div>
+    <div><strong>{{ report.preparation.summary.columns_after_structural }}</strong><span>Columns after structural</span></div>
+  </div>
+  <table><thead><tr><th>Decision</th><th>Category</th><th>Why</th><th>Rows affected</th><th>Columns affected</th><th>Before → after</th></tr></thead><tbody>
+  {% for decision in report.preparation.decisions %}
+    <tr><td>{{ decision.action }}</td><td>{{ decision.stage.value }}</td><td>{{ decision.reason }}</td><td>{{ decision.rows_affected }}</td><td>{{ decision.columns_affected }}{% if decision.columns %}: {{ decision.columns|join(', ') }}{% endif %}</td><td>{{ decision.before or '—' }} → {{ decision.after or '—' }}</td></tr>
+  {% endfor %}
+  </tbody></table>
+</section>
+
+<section id="eda">
+  <h2>Exploratory Data Analysis</h2>
+  {% if report.eda.findings %}<ul>{% for finding in report.eda.findings %}<li>{{ finding.text }}</li>{% endfor %}</ul>{% else %}<p>No EDA finding could be computed from the structurally cleaned data.</p>{% endif %}
+  {% if report.eda.skipped_analyses %}
+    <h3>Analyses skipped by design</h3><ul>{% for item in report.eda.skipped_analyses %}<li><strong>{{ item.analysis }}:</strong> {{ item.reason }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% for chart in report.charts if chart.source_object.__class__.__module__.startswith('crispdm_studio.eda') %}
+    <article class="chart-card"><h3>{{ chart.title }}</h3><div class="chart-interactive">{{ chart.interactive_html }}</div>{{ chart.static_marker|safe }}</article>
+  {% endfor %}
+</section>
+
+<section id="clustering">
+  <h2>Clustering</h2>
+  {% if report.clustering.skipped %}
+    <div class="skip"><strong>Clustering skipped.</strong> {{ report.clustering.selection_reason }}</div>
+  {% else %}
+    <p>Chosen k: <strong>{{ report.clustering.chosen_k }}</strong>. {{ report.clustering.selection_reason }} Silhouette: {{ report.clustering.silhouette|metric }}.</p>
+    {% for segment in report.clustering.segment_descriptions %}<p>{{ segment.text }}</p>{% endfor %}
+    {% if report.clustering.profiles %}
+    <table><thead><tr><th>Cluster</th><th>Rows</th><th>Share</th><th>Numeric medians</th><th>Categorical modes</th></tr></thead><tbody>
+    {% for profile in report.clustering.profiles %}<tr><td>{{ profile.cluster }}</td><td>{{ profile.size }}</td><td>{{ profile.share|pct }}</td><td>{% for k,v in profile.numeric_medians.items() %}{{ k }}={{ v|num }}{% if not loop.last %}; {% endif %}{% endfor %}</td><td>{% for k,v in profile.categorical_modes.items() %}{{ k }}={{ v }}{% if not loop.last %}; {% endif %}{% endfor %}</td></tr>{% endfor %}
+    </tbody></table>
+    {% endif %}
+  {% endif %}
+  {% for chart in report.charts if chart.source_object.__class__.__module__.startswith('crispdm_studio.clustering') %}
+    <article class="chart-card"><h3>{{ chart.title }}</h3><div class="chart-interactive">{{ chart.interactive_html }}</div>{{ chart.static_marker|safe }}</article>
+  {% endfor %}
+</section>
+
+<section id="predictive-modeling">
+  <h2>Predictive Modeling</h2>
+  <p>{{ report.modeling.leakage_note }}</p>
+  {% if report.modeling.skipped %}
+    <div class="skip"><strong>Supervised modeling skipped.</strong> {{ report.modeling.skip_reason }}</div>
+  {% else %}
+    <p>Confirmed target: <strong>{{ report.modeling.target }}</strong>. Detected task: <strong>{{ report.modeling.task_type.value }}</strong>. {{ report.modeling.target_assessment.reason }}</p>
+    {% if report.modeling.split %}<p>Training rows: {{ report.modeling.split.train_rows }}; held-out test rows: {{ report.modeling.split.test_rows }}; stratified split: {{ report.modeling.split.stratified }}; CV folds: {{ report.modeling.cv_folds }}.</p>{% endif %}
+  {% endif %}
+</section>
+
+<section id="model-comparison">
+  <h2>Model Comparison</h2>
+  {% if report.modeling.model_results %}
+  <table><thead><tr><th>Model</th><th>Baseline</th><th>Test metrics</th><th>CV mean ± std</th><th>Divergence</th></tr></thead><tbody>
+  {% for model in report.modeling.model_results %}
+    <tr><td>{{ model.name }}</td><td>{{ model.is_baseline }}</td><td>{% for k,v in model.test_metrics.items() %}{{ k }}={{ v|metric }}{% if not loop.last %}; {% endif %}{% endfor %}</td><td>{% for m in model.cv_metrics %}{{ m.name }}={{ m.mean|metric }} ± {{ m.std|metric }}{% if not loop.last %}; {% endif %}{% endfor %}</td><td>{% if model.overfitting_flag %}{{ model.overfitting_reason }}{% else %}No configured divergence flag.{% endif %}</td></tr>
+  {% endfor %}
+  </tbody></table>
+  {% else %}<p>No fitted model comparison is available.</p>{% endif %}
+</section>
+
+<section id="evaluation">
+  <h2>Evaluation</h2>
+  {% if report.evaluation.skipped %}<div class="skip"><strong>No defensible model selected.</strong> {{ report.evaluation.skip_reason }}</div>{% else %}<p><strong>Selected model: {{ report.evaluation.selected_model_name }}</strong>. {{ report.evaluation.selection_reason }}</p>{% endif %}
+  <p>{{ report.evaluation.imbalance.message }}</p>
+  {% if report.evaluation.baseline_improvements %}
+  <table><thead><tr><th>Model</th><th>Metric</th><th>Baseline</th><th>Model</th><th>Absolute improvement</th><th>Beats baseline</th></tr></thead><tbody>
+  {% for item in report.evaluation.baseline_improvements %}<tr><td>{{ item.model_name }}</td><td>{{ item.metric }}</td><td>{{ item.baseline_value|metric }}</td><td>{{ item.model_value|metric }}</td><td>{{ item.absolute_improvement|metric }}</td><td>{{ item.beats_baseline }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% endif %}
+  {% if report.evaluation.permutation_importance %}
+    <h3>Held-out permutation importance</h3>
+    <table><thead><tr><th>Feature</th><th>Mean</th><th>Std</th></tr></thead><tbody>{% for item in report.evaluation.permutation_importance %}<tr><td>{{ item.feature }}</td><td>{{ item.importance_mean|metric }}</td><td>{{ item.importance_std|metric }}</td></tr>{% endfor %}</tbody></table>
+  {% endif %}
+  {% for chart in report.charts if chart.source_object.__class__.__module__.startswith('crispdm_studio.evaluation') %}
+    <article class="chart-card"><h3>{{ chart.title }}</h3><div class="chart-interactive">{{ chart.interactive_html }}</div>{{ chart.static_marker|safe }}</article>
+  {% endfor %}
+</section>
+
+<section id="limitations">
+  <h2>Limitations</h2>
+  {% if report.limitations %}<ul>{% for item in report.limitations %}<li>{{ item }}</li>{% endfor %}</ul>{% else %}<p>No computed limitation was recorded.</p>{% endif %}
+</section>
+
+<section id="recommendation">
+  <h2>Recommendation</h2>
+  <h3>What we learned</h3><p>{{ report.evaluation.recommendation.what_we_learned }}</p>
+  <h3>How reliable it appears</h3><p>{{ report.evaluation.recommendation.reliability }}</p>
+  <h3>What action is reasonable</h3><p>{{ report.evaluation.recommendation.reasonable_action }}</p>
+  <h3>What limitations matter</h3><p>{{ report.evaluation.recommendation.limitations }}</p>
+  <h3>What to do next</h3><p>{{ report.evaluation.recommendation.next_steps }}</p>
+</section>
+
+<section id="technical-appendix">
+  <h2>Technical appendix</h2>
+  <table><tbody>
+    <tr><th>Structural rows after preparation</th><td>{{ report.preparation.summary.rows_after_structural }}</td></tr>
+    <tr><th>Structural columns after preparation</th><td>{{ report.preparation.summary.columns_after_structural }}</td></tr>
+    <tr><th>Deferred preprocessing numeric columns</th><td>{{ report.preparation.preprocessing_spec.numeric_columns|join(', ') }}</td></tr>
+    <tr><th>Deferred preprocessing categorical columns</th><td>{{ report.preparation.preprocessing_spec.categorical_columns|join(', ') }}</td></tr>
+    <tr><th>EDA reusable charts</th><td>{{ report.eda.charts|length }}</td></tr>
+    <tr><th>Clustering reusable charts</th><td>{{ report.clustering.charts|length }}</td></tr>
+    <tr><th>Evaluation reusable charts</th><td>{{ report.evaluation.charts|length }}</td></tr>
+    <tr><th>Supervised primary metric</th><td>{{ report.modeling.primary_metric or 'Not available' }}</td></tr>
+  </tbody></table>
+</section>
+</main>
+</body>
+</html>

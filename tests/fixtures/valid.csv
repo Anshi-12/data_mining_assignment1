@@ -1,0 +1,4 @@
+customer,amount,segment
+A,10.5,alpha
+B,15.0,beta
+C,,alpha
