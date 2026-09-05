@@ -1,0 +1,206 @@
+{
+  "generated_at_utc": "2026-09-01T20:12:23.137102+00:00",
+  "rows": 10000,
+  "validation_rows": 2500,
+  "selection_metric": "validation_pr_auc",
+  "runs": [
+    {
+      "run_id": 1,
+      "params": {
+        "contamination": 0.028,
+        "n_estimators": 100,
+        "max_samples": 0.75
+      },
+      "roc_auc": 0.9996856361195602,
+      "pr_auc": 0.9906686962042605,
+      "precision": 0.9770114942528736,
+      "recall": 0.8673469387755102,
+      "f1": 0.918918918918919,
+      "fit_seconds": 0.1735329160001129,
+      "inference_ms_per_row": 0.01479202720001922,
+      "measured": true
+    },
+    {
+      "run_id": 2,
+      "params": {
+        "contamination": 0.028,
+        "n_estimators": 100,
+        "max_samples": "auto"
+      },
+      "roc_auc": 0.9998343217386871,
+      "pr_auc": 0.9958852157028373,
+      "precision": 0.9880952380952381,
+      "recall": 0.8469387755102041,
+      "f1": 0.9120879120879121,
+      "fit_seconds": 0.13755348299991965,
+      "inference_ms_per_row": 0.010545365200050583,
+      "measured": true
+    },
+    {
+      "run_id": 3,
+      "params": {
+        "contamination": 0.028,
+        "n_estimators": 160,
+        "max_samples": 0.75
+      },
+      "roc_auc": 0.9997621030093969,
+      "pr_auc": 0.9930402175033837,
+      "precision": 0.9772727272727273,
+      "recall": 0.8775510204081632,
+      "f1": 0.9247311827956989,
+      "fit_seconds": 0.27302003800014063,
+      "inference_ms_per_row": 0.025562128000092343,
+      "measured": true
+    },
+    {
+      "run_id": 4,
+      "params": {
+        "contamination": 0.028,
+        "n_estimators": 160,
+        "max_samples": "auto"
+      },
+      "roc_auc": 0.999876803344152,
+      "pr_auc": 0.9970954068590994,
+      "precision": 1.0,
+      "recall": 0.8469387755102041,
+      "f1": 0.9171270718232044,
+      "fit_seconds": 0.2162087909996444,
+      "inference_ms_per_row": 0.01672468439992372,
+      "measured": true
+    },
+    {
+      "run_id": 5,
+      "params": {
+        "contamination": 0.035,
+        "n_estimators": 100,
+        "max_samples": 0.75
+      },
+      "roc_auc": 0.9996856361195602,
+      "pr_auc": 0.9906686962042605,
+      "precision": 0.9607843137254902,
+      "recall": 1.0,
+      "f1": 0.98,
+      "fit_seconds": 0.17280791700022746,
+      "inference_ms_per_row": 0.015566888399916936,
+      "measured": true
+    },
+    {
+      "run_id": 6,
+      "params": {
+        "contamination": 0.035,
+        "n_estimators": 100,
+        "max_samples": "auto"
+      },
+      "roc_auc": 0.9998343217386871,
+      "pr_auc": 0.9958852157028373,
+      "precision": 0.96,
+      "recall": 0.9795918367346939,
+      "f1": 0.9696969696969697,
+      "fit_seconds": 0.14850341200008188,
+      "inference_ms_per_row": 0.012175974400088307,
+      "measured": true
+    },
+    {
+      "run_id": 7,
+      "params": {
+        "contamination": 0.035,
+        "n_estimators": 160,
+        "max_samples": 0.75
+      },
+      "roc_auc": 0.9997621030093969,
+      "pr_auc": 0.9930402175033837,
+      "precision": 0.9607843137254902,
+      "recall": 1.0,
+      "f1": 0.98,
+      "fit_seconds": 0.2768493959997613,
+      "inference_ms_per_row": 0.023964027600050033,
+      "measured": true
+    },
+    {
+      "run_id": 8,
+      "params": {
+        "contamination": 0.035,
+        "n_estimators": 160,
+        "max_samples": "auto"
+      },
+      "roc_auc": 0.999876803344152,
+      "pr_auc": 0.9970954068590994,
+      "precision": 0.9595959595959596,
+      "recall": 0.9693877551020408,
+      "f1": 0.9644670050761421,
+      "fit_seconds": 0.22419444999968619,
+      "inference_ms_per_row": 0.015530697999929545,
+      "measured": true
+    },
+    {
+      "run_id": 9,
+      "params": {
+        "contamination": 0.042,
+        "n_estimators": 100,
+        "max_samples": 0.75
+      },
+      "roc_auc": 0.9996856361195602,
+      "pr_auc": 0.9906686962042605,
+      "precision": 0.8099173553719008,
+      "recall": 1.0,
+      "f1": 0.8949771689497716,
+      "fit_seconds": 0.1653433199999199,
+      "inference_ms_per_row": 0.01563886719995935,
+      "measured": true
+    },
+    {
+      "run_id": 10,
+      "params": {
+        "contamination": 0.042,
+        "n_estimators": 100,
+        "max_samples": "auto"
+      },
+      "roc_auc": 0.9998343217386871,
+      "pr_auc": 0.9958852157028373,
+      "precision": 0.8305084745762712,
+      "recall": 1.0,
+      "f1": 0.9074074074074074,
+      "fit_seconds": 0.14534132900007535,
+      "inference_ms_per_row": 0.009667740399891045,
+      "measured": true
+    },
+    {
+      "run_id": 11,
+      "params": {
+        "contamination": 0.042,
+        "n_estimators": 160,
+        "max_samples": 0.75
+      },
+      "roc_auc": 0.9997621030093969,
+      "pr_auc": 0.9930402175033837,
+      "precision": 0.8166666666666667,
+      "recall": 1.0,
+      "f1": 0.8990825688073395,
+      "fit_seconds": 0.263161294999918,
+      "inference_ms_per_row": 0.024716589999843563,
+      "measured": true
+    },
+    {
+      "run_id": 12,
+      "params": {
+        "contamination": 0.042,
+        "n_estimators": 160,
+        "max_samples": "auto"
+      },
+      "roc_auc": 0.999876803344152,
+      "pr_auc": 0.9970954068590994,
+      "precision": 0.8305084745762712,
+      "recall": 1.0,
+      "f1": 0.9074074074074074,
+      "fit_seconds": 0.2178141549998145,
+      "inference_ms_per_row": 0.016472510799940207,
+      "measured": true
+    }
+  ],
+  "selected_params": {
+    "contamination": 0.035,
+    "n_estimators": 160,
+    "max_samples": "auto"
+  },
+  "selection_reason": "Run 8 selected from 12 measured configurations: highest validation PR-AUC (0.9971); F1 (0.9645) and ROC-AUC (0.9999) were used as tie-breakers."
+}

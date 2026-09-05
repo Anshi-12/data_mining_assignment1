@@ -1,0 +1,56 @@
+{
+  "rows": 10000,
+  "validation_rows": 2500,
+  "results": [
+    {
+      "model_name": "Isolation Forest",
+      "roc_auc": 0.999876803344152,
+      "pr_auc": 0.9970954068590994,
+      "precision": 0.9595959595959596,
+      "recall": 0.9693877551020408,
+      "f1": 0.9644670050761421,
+      "fit_seconds": 0.2229066810000404,
+      "inference_ms_per_row": 0.014779323999937333
+    },
+    {
+      "model_name": "Local Outlier Factor",
+      "roc_auc": 0.308769053000051,
+      "pr_auc": 0.07031573529094823,
+      "precision": 0.05319148936170213,
+      "recall": 0.05102040816326531,
+      "f1": 0.052083333333333336,
+      "fit_seconds": 0.29002942199986137,
+      "inference_ms_per_row": 0.07357909279999147
+    },
+    {
+      "model_name": "One-Class SVM",
+      "roc_auc": 0.9285714285714286,
+      "pr_auc": 0.8893965576397742,
+      "precision": 0.8686868686868687,
+      "recall": 0.8775510204081632,
+      "f1": 0.8730964467005076,
+      "fit_seconds": 0.07145324300017819,
+      "inference_ms_per_row": 0.013532842799941136
+    },
+    {
+      "model_name": "Robust Mahalanobis",
+      "roc_auc": 1.0,
+      "pr_auc": 1.0,
+      "precision": 0.9702970297029703,
+      "recall": 1.0,
+      "f1": 0.9849246231155779,
+      "fit_seconds": 1.0236812779999127,
+      "inference_ms_per_row": 0.00037890799994784176
+    },
+    {
+      "model_name": "NumPy Autoencoder",
+      "roc_auc": 0.9995284541793403,
+      "pr_auc": 0.9882289272303391,
+      "precision": 0.9292929292929293,
+      "recall": 0.9387755102040817,
+      "f1": 0.934010152284264,
+      "fit_seconds": 0.32419737500003976,
+      "inference_ms_per_row": 0.00024398400000791298
+    }
+  ]
+}
