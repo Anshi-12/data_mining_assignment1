@@ -15,8 +15,8 @@ Chatbot-assisted data science and coding. This assignment has two parts, each on
 
 ## 📺 Video Walkthroughs
 
-- **Part 1 — CRISP-DM Studio:** <!-- PASTE PART 1 YOUTUBE LINK HERE -->
-- **Part 2 — Anomaly Detection Studio:** <!-- PASTE PART 2 YOUTUBE LINK HERE -->
+- **Part 1 — CRISP-DM Studio:** <https://youtu.be/rxYuhJxUmkM?feature=shared>
+- **Part 2 — Anomaly Detection Studio:** <https://youtu.be/UH8KraVDyRY?is=vqFhyMfPs57YKYSB>
 
 <!-- Optional: Part 1 Medium article — PASTE MEDIUM LINK HERE -->
 
